@@ -51,6 +51,27 @@ services:
         depends_on:
             - "clickhouse-zookeeper-01"
 
+    # cluster_new
+    cluster-one-sh-query2:
+        image: clickhouse/clickhouse-server:21.8
+        hostname: cluster-one-sh-query2
+        container_name: cluster-one-sh-query2
+        ports:
+            - 9005:9000
+            - 8225:8123
+        volumes:
+                - ./config/clickhouse_config.xml:/etc/clickhouse-server/config.xml
+                - ./config/clickhouse_metrika_new.xml:/etc/clickhouse-server/metrika.xml
+                - ./config/macros/macros-query2.xml:/etc/clickhouse-server/config.d/macros.xml
+                - ./config/users.xml:/etc/clickhouse-server/users.xml
+                # - ./data/server-03:/var/lib/clickhouse
+        ulimits:
+            nofile:
+                soft: 262144
+                hard: 262144
+        depends_on:
+            - "clickhouse-zookeeper-01"
+
 networks:
     default:
         name: sentry

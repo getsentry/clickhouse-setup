@@ -13,6 +13,12 @@
 					<port>9000</port>
 				</replica>
 			</shard>
+			<shard>
+				<replica>
+					<host>cluster-one-sh-query2</host>
+					<port>9000</port>
+				</replica>				
+			</shard>
 		</cluster_one_sh>
 	</clickhouse_remote_servers>
 	<zookeeper-servers>
