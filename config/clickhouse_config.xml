@@ -64,9 +64,9 @@
     -->
 
     <!-- Listen specified host. use :: (wildcard IPv6 address), if you want to accept connections both with IPv4 and IPv6 from everywhere. -->
-    <!-- <listen_host>::</listen_host> -->
+    <listen_host>::</listen_host>
     <!-- Same for hosts with disabled ipv6: -->
-    <!-- <listen_host>0.0.0.0</listen_host> -->
+    <listen_host>0.0.0.0</listen_host>
 
     <!-- Default values - try listen localhost on ipv4 and ipv6: -->
     <!--
@@ -175,6 +175,8 @@
          Values for substitutions are specified in /yandex/name_of_substitution elements in that file.
       -->
     <include_from>/etc/clickhouse-server/metrika.xml</include_from>
+
+    <include_from>/etc/clickhouse-server/storage.xml</include_from>
     <!-- ZooKeeper is used to store metadata about replicas, when using Replicated tables.
          Optional. If you don't use replicated tables, you could omit that.
 
@@ -367,4 +369,38 @@
 
     <!-- Uncomment to disable ClickHouse internal DNS caching. -->
     <!-- <disable_internal_dns_cache>1</disable_internal_dns_cache> -->
+
+	<storage_configuration>
+		<disks>
+			<default>
+			</default>
+			<fast_ssd>
+				<path>/var/lib/clickhouse/data/</path>
+			</fast_ssd>
+			<gcs>
+				<support_batch_delete>false</support_batch_delete>
+				<type>s3</type>
+				<endpoint>https://storage.googleapis.com/dalitso-clickhouse-gcs/clickhouse/</endpoint>
+				<access_key_id>YOUR_HMAC_ACCESS_KEY_ID</access_key_id>
+				<secret_access_key>YOUR_HMAC_KEY_SECRET</secret_access_key>
+				<metadata_path>/var/lib/clickhouse/disks/gcs/</metadata_path>
+			</gcs>
+		</disks>
+		<policies>
+			<local_disk_and_gcs> <!-- policy name -->
+				<volumes>
+					<default>
+						<disk>default</disk>
+					</default>
+					<hot>
+						<disk>fast_ssd</disk>
+					</hot>
+					<cold>
+						<disk>gcs</disk>
+					</cold>
+				</volumes>
+			</local_disk_and_gcs>
+
+		</policies>
+	</storage_configuration>
 </yandex>
